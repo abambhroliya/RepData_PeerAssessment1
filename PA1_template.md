@@ -3,47 +3,56 @@
 
 ## Loading and preprocessing the data
 
-```{r}
+
+```r
 data<-read.csv("C:/Users/Arvind/githublocal/RepData_PeerAssessment1/activity.csv")
 data$date<-as.Date(data$date,"%Y-%m-%d")
 ```
 
 ## What is mean total number of steps taken per day?
 
-```{r}
+
+```r
 dataperday<-tapply(data$steps,data$date,sum,na.rm=T)
 meanfordataperday<-mean(dataperday,na.rm=T)
 ```
 
-Mean total number of steps taken per day is `r meanfordataperday`.
+Mean total number of steps taken per day is 9354.2295.
 
 ## What is the average daily activity pattern?
 
-```{r}
+
+```r
 dataper5min<-tapply(data$steps,data$interval,mean,na.rm=T)
 
 plot(dataper5min,type="l",xlab="5 min interval identifier", ylab="Average number of steps",main="Time series plot of 5-minute interval and average number of steps")
 abline(v=which.max(dataper5min),col="red")
 axis(1,col="red",col.axis="red",at=which.max(dataper5min),mgp = c(10, 2, 0))
+```
 
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
+
+```r
 maxsteps5min<-which.max(dataper5min)
 ```
 
-"`r maxsteps5min`" 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps.
+"104" 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps.
 
 ## Imputing missing values
 
 Calculating the number of rows with missing values
 
-```{r}
+
+```r
 missingvalue<-sum(is.na(data$steps))
 ```
 
-Total number of observation with missing values in steps is `r missingvalue`.
+Total number of observation with missing values in steps is 2304.
 
 Filling in all missing values in dataset with mean for corresponding 5-min interval and creating a new dataset
 
-```{r}
+
+```r
 dataper5min<-data.frame(rownames(dataper5min),dataper5min)
 names(dataper5min)<-c("interval","meansteps")
 imputeddata<-merge(data,dataper5min,by="interval")
@@ -52,27 +61,32 @@ imputeddata$newsteps<-ifelse(is.na(imputeddata$steps),imputeddata$meansteps,impu
 
 Making a histogram of the total number of steps taken each day for imputed dataset
 
-```{r}
+
+```r
 imputeddataperday<-tapply(imputeddata$newsteps,imputeddata$date,sum)
 hist(imputeddataperday)
 ```
 
+![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6.png) 
+
 Calculating and reporting the mean and median total number of steps taken per day for imputed dataset
 
-```{r}
+
+```r
 meanforimputeddataperday<-mean(imputeddataperday)
 medianforimputeddataperday<-median(imputeddataperday)
 ```
 
-Mean and median total number of steps taken per day for imputed dataset are `r meanforimputeddataperday` and `r medianforimputeddataperday`, respectively.
+Mean and median total number of steps taken per day for imputed dataset are 1.0766 &times; 10<sup>4</sup> and 1.0766 &times; 10<sup>4</sup>, respectively.
 
 Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
 
-```{r}
+
+```r
 medianfordataperday<-median(dataperday,na.rm=T)
 ```
 
-Mean and median total number of steps taken per day for original dataset are `r meanfordataperday` and `r medianfordataperday`, respectively.
+Mean and median total number of steps taken per day for original dataset are 9354.2295 and 10395, respectively.
 
 Mean and median values for original data are smaller than mean and median values for imputed data. Imputation of missing values, by using the mean for corresponding 5-minute interval, overestimates the mean and median values for total number of steps taken per day. 
 
@@ -80,16 +94,25 @@ Mean and median values for original data are smaller than mean and median values
 
 Creating a new factor variable in the dataset with two levels - "weekday" and "weekend" indicating whether a given date is a weekday or weekend day
 
-```{r}
+
+```r
 imputeddata$weekday<-weekdays(imputeddata$date)
 imputeddata$weekday<-ifelse(imputeddata$weekday==c("Satureday","Sunday"),"weekend","weekday")
 ```
 
 Making a time series plot of 5-minute interval and average number of steps for imputed data
 
-```{r}
+
+```r
 imputeddataper5min<-aggregate(newsteps~interval+weekday,FUN=mean,data=imputeddata)
 library(ggplot2)
+```
+
+```
+## Warning: package 'ggplot2' was built under R version 3.0.3
+```
+
+```r
 ggplot(imputeddataper5min,aes(x=interval,y=newsteps))+
   facet_wrap(~weekday,nrow=2)+
   geom_line()+
@@ -97,3 +120,5 @@ ggplot(imputeddataper5min,aes(x=interval,y=newsteps))+
   labs(y="Average number of steps")+
   labs(title="Time series plot of 5-minute interval and average number of steps for imputed data")
 ```
+
+![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-10.png) 
