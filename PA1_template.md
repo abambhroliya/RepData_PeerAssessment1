@@ -14,10 +14,26 @@ data$date<-as.Date(data$date,"%Y-%m-%d")
 
 ```r
 dataperday<-tapply(data$steps,data$date,sum,na.rm=T)
-meanfordataperday<-mean(dataperday,na.rm=T)
 ```
 
-Mean total number of steps taken per day is 9354.2295.
+Making a histogram of the total number of steps taken each day for original dataset
+
+
+```r
+hist(dataperday)
+```
+
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
+
+Calculating mean and median for total number of steps taken each day for original dataset
+
+
+```r
+meanfordataperday<-mean(dataperday,na.rm=T)
+medianfordataperday<-median(dataperday,na.rm=T)
+```
+
+Mean and median total number of steps taken per day for original dataset are 9354.2295 and 10395, respectively.
 
 ## What is the average daily activity pattern?
 
@@ -30,7 +46,7 @@ abline(v=which.max(dataper5min),col="red")
 axis(1,col="red",col.axis="red",at=which.max(dataper5min),mgp = c(10, 2, 0))
 ```
 
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5.png) 
 
 ```r
 maxsteps5min<-which.max(dataper5min)
@@ -67,7 +83,7 @@ imputeddataperday<-tapply(imputeddata$newsteps,imputeddata$date,sum)
 hist(imputeddataperday)
 ```
 
-![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6.png) 
+![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-8.png) 
 
 Calculating and reporting the mean and median total number of steps taken per day for imputed dataset
 
@@ -80,13 +96,6 @@ medianforimputeddataperday<-median(imputeddataperday)
 Mean and median total number of steps taken per day for imputed dataset are 1.0766 &times; 10<sup>4</sup> and 1.0766 &times; 10<sup>4</sup>, respectively.
 
 Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
-
-
-```r
-medianfordataperday<-median(dataperday,na.rm=T)
-```
-
-Mean and median total number of steps taken per day for original dataset are 9354.2295 and 10395, respectively.
 
 Mean and median values for original data are smaller than mean and median values for imputed data. Imputation of missing values, by using the mean for corresponding 5-minute interval, overestimates the mean and median values for total number of steps taken per day. 
 
@@ -121,4 +130,4 @@ ggplot(imputeddataper5min,aes(x=interval,y=newsteps))+
   labs(title="Time series plot of 5-minute interval and average number of steps for imputed data")
 ```
 
-![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-10.png) 
+![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-11.png) 

@@ -12,10 +12,22 @@ data$date<-as.Date(data$date,"%Y-%m-%d")
 
 ```{r}
 dataperday<-tapply(data$steps,data$date,sum,na.rm=T)
-meanfordataperday<-mean(dataperday,na.rm=T)
 ```
 
-Mean total number of steps taken per day is `r meanfordataperday`.
+Making a histogram of the total number of steps taken each day for original dataset
+
+```{r}
+hist(dataperday)
+```
+
+Calculating mean and median for total number of steps taken each day for original dataset
+
+```{r}
+meanfordataperday<-mean(dataperday,na.rm=T)
+medianfordataperday<-median(dataperday,na.rm=T)
+```
+
+Mean and median total number of steps taken per day for original dataset are `r meanfordataperday` and `r medianfordataperday`, respectively.
 
 ## What is the average daily activity pattern?
 
@@ -67,12 +79,6 @@ medianforimputeddataperday<-median(imputeddataperday)
 Mean and median total number of steps taken per day for imputed dataset are `r meanforimputeddataperday` and `r medianforimputeddataperday`, respectively.
 
 Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
-
-```{r}
-medianfordataperday<-median(dataperday,na.rm=T)
-```
-
-Mean and median total number of steps taken per day for original dataset are `r meanfordataperday` and `r medianfordataperday`, respectively.
 
 Mean and median values for original data are smaller than mean and median values for imputed data. Imputation of missing values, by using the mean for corresponding 5-minute interval, overestimates the mean and median values for total number of steps taken per day. 
 
